@@ -1,6 +1,6 @@
 spark_pr is a Ruby class to generate sparkline graphs with PNG or ASCII output.
 
-It doesn't depend on external libraries and generates PNGs with pure Ruby code.
+It only depends on zlib and generates PNGs with pure Ruby code.
 The line-graph outputs antialised lines.
 
 Example for PNG output:
@@ -12,3 +12,7 @@ end
 Example ASCII output:
 
 puts Spark.smooth( [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42, 1, 98, 34, 53, 97, 55, 74, 63, 38, 31, 98, 89], :has_min => true, :has_max => true, :height => 14, :step => 4 ).to_ascii
+
+The SparkCanvas class can also be used for other drawing operations,
+it provides drawing canvas with alpha blending and some primitive graphics
+operations and PNG output in just about 100 lines of Ruby code.

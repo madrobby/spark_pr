@@ -93,8 +93,7 @@ class SparkCanvas
   def to_png
     header = [137, 80, 78, 71, 13, 10, 26, 10].pack("C*")
     raw_data = @canvas.map { |row| [0] + row }.flatten.pack("C*")
-    ihdr_data = [@canvas.first.length,@canvas.length,
-    8,2,0,0,0].pack("NNCCCCC")
+    ihdr_data = [@canvas.first.length,@canvas.length,8,2,0,0,0].pack("NNCCCCC")
     
     header +
     build_png_chunk("IHDR", ihdr_data) +
