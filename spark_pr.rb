@@ -117,7 +117,13 @@ end
 module Spark
   # normalize arr to contain values between 0..1 inclusive
   def Spark.normalize( arr, type = :linear )
-    arr.map!{|v| Math.log(v) } if type == :logarithmic
+    arr.each do |x|
+      if x.integer?
+        arr.map!{|v| Math.log(v) } if type == :logarithmic
+      else
+        arr.map!{|v| Math.cosh(v) } if type == :float
+      end
+    end
     adj, fac = arr.min, arr.max-arr.min
     arr.map {|v| (v-adj).quo(fac) rescue 0 }
   end
