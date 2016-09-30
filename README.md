@@ -43,7 +43,7 @@ Step 5: Put image_tag that requests the sparkline PNG image file into the view w
   
 That is all! The result is an awesome sparkline graph.
 Its a clear, fast visual representation of data, which has the three major points
-- min, max, last  highlighted.
+- [min, max, last] points  highlighted.
 
 
 
@@ -51,7 +51,9 @@ Its a clear, fast visual representation of data, which has the three major point
 
 Example ASCII output:
 
+```ruby
 puts Spark.smooth( [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42, 1, 98, 34, 53, 97, 55, 74, 63, 38, 31, 98, 89], :has_min => true, :has_max => true, :height => 14, :step => 4 ).to_ascii
+```
 
 The SparkCanvas class can also be used for other drawing operations,
 it provides drawing canvas with alpha blending and some primitive graphics
