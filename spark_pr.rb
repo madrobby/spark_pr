@@ -17,6 +17,7 @@ class SparkCanvas
   BLACK = [0x00,0x00,0x00]
   GRAY  = [0x66,0x66,0x66,0xFF]
   RED   = [0xFF,0x00,0x00,0xFF]
+  GREEN = [0x00,0x80,0x00,0xFF]
 
   def initialize(width,height)
     @canvas = []
@@ -122,10 +123,21 @@ end
 
 module Spark
   # normalize arr to contain values between 0..1 inclusive
-  def Spark.normalize( arr, type = :linear )
-    arr.map!{|v| Math.log(v) } if type == :logarithmic
-    adj, fac = arr.min, arr.max-arr.min
-    arr.map {|v| (v-adj).quo(fac) rescue 0 }
+  def Spark.normalize( results, type = :linear )
+    hasColorPerValue = results.first.is_a?(Hash)
+    values = hasColorPerValue ? results.map { |x| x.keys.first } : results
+
+    values.map! {|v| Math.log(v) } if type == :logarithmic
+    adj, fac = values.min, values.max - values.min
+    values.map! {|v| (v-adj).quo(fac) rescue 0 }
+
+    if (hasColorPerValue)
+      values.each_with_index do |v, i|
+        results[i][v] = results[i].delete(results[i].keys.first)
+      end
+    end
+
+    results
   end
 
   def Spark.process_options( options )
@@ -190,7 +202,7 @@ module Spark
     options = self.process_options(options)
     o = {
       :height => 14,
-      :upper => 0.5,
+      :threshold => 0.5,
       :has_min => false,
       :has_max => false
     }.merge(options)
@@ -205,7 +217,7 @@ module Spark
     i = -2
     results.each do |r|
       p = canvas.height - 4 - r*fac
-      canvas.color = r < o[:upper] ? SparkCanvas::GRAY : SparkCanvas::RED
+      canvas.color = r < o[:threshold] ? SparkCanvas::GRAY : SparkCanvas::RED
       canvas.line(i+=2, p, i, p+3)
     end
 
@@ -216,7 +228,7 @@ module Spark
     optionOverrides = self.process_options(optionOverrides)
     options = {
       :height => 14,
-      :upper => 0.5,
+      :threshold => 0.5,
       :has_min => false,
       :has_max => false
     }.merge(optionOverrides)
@@ -225,6 +237,7 @@ module Spark
 
     canvas = SparkCanvas.new(options[:width], options[:height])
 
+    hasColorPerValue = results.first.is_a?(Hash)
     results = Spark.normalize(results, options[:normalize])
     fac = canvas.height - 4
 
@@ -232,7 +245,18 @@ module Spark
     bar_left = -2
     bar_spacing = 2
 
-    results.each do |value|
+    results.each do |result|
+      value = nil
+      color = nil
+
+      if (hasColorPerValue)
+        value = result.keys.first
+        color = result[value]
+      else
+        value = result
+        color = value < options[:threshold] ? SparkCanvas::GRAY : SparkCanvas::RED
+      end
+
       bar_top = canvas.height - 4 - value*fac
       bar_left += bar_spacing
 
@@ -241,7 +265,7 @@ module Spark
       x1 = bar_left
       y1 = canvas.height
 
-      canvas.color = value < options[:upper] ? SparkCanvas::GRAY : SparkCanvas::RED
+      canvas.color = color
       canvas.line(x0, y0, x1, y1)
     end
 
