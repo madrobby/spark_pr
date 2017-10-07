@@ -1,0 +1,4 @@
+language: ruby
+
+script:
+  - ruby tests/examples_test.rb
