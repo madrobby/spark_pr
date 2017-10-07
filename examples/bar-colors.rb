@@ -32,7 +32,5 @@ File.open(pngFilename(__FILE__), 'wb' ) do |png|
     data,
     :type => 'bar',
     :height => 40,
-    :step => 10,
-    :normalize => 'logarithmic'
   )
 end

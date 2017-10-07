@@ -7,8 +7,6 @@ File.open(pngFilename(__FILE__), 'wb' ) do |png|
   png << Spark.plot(
     data,
     :type => 'bar',
-    :height => 40,
-    :step => 10,
-    :normalize => 'logarithmic'
+    :height => 40
   )
 end

@@ -11,7 +11,5 @@ File.open(pngFilename(__FILE__), 'wb' ) do |png|
     :has_max => true,
     :has_last => true,
     :height => 40,
-    :step => 10,
-    :normalize => 'logarithmic'
   )
 end
